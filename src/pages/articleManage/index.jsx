@@ -118,8 +118,7 @@ class Article extends Component {
 
     // 切换类型查询
     typeChange = (e) => {
-
-        const type = e.target.value === 0 ? null : e.target.value;
+        const type = e.target.value === '0' ? null : e.target.value;
 
         this.setState({
             type
