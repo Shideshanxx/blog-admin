@@ -119,7 +119,6 @@ const UserModel = {
         *addEditReward({ payload, callback }, { call, put, select }) {
             const response = yield call(addEditReward, payload);
             if (response.code === 200) {
-
                 // 重新查询用户信息
                 yield put({
                     type: 'fetchCurrent',

@@ -2,6 +2,7 @@ import router from 'umi/router';
 import { login } from '@/services/login';
 import { setAuthority } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
+
 const Model = {
     namespace: 'login',
     state: {

@@ -51,14 +51,11 @@ class ArticleEdit extends Component {
         super(props);
 
         this.state = {
-            articleId: null,
             currentItem: null,
             fileList: [],
             previewImage: '',
             previewVisible: false,
-            editorModule: null,
             formulaVisible: false, // 公式模态框
-            latexText: '',
             uploadImageVisible: false, // 上传图片模态框
             uploadImageUrl: null,	// 上传图片地址
             // 上传设置
@@ -82,7 +79,6 @@ class ArticleEdit extends Component {
                 callback: res => {
                     this.setState({
                         currentItem: res.data,
-                        tags: res.data.tags ? res.data.tags.split(',') : [],
                         fileList: res.data.cover ? [{
                             uid: res.data.id,
                             name: 'cover.png',
@@ -120,8 +116,8 @@ class ArticleEdit extends Component {
             searchReplace: true,
             // watch : false,                // 关闭实时预览
             htmlDecode: "style,script,iframe|on*",            // 开启 HTML 标签解析，为了安全性，默认不开启    
-            //toolbar  : false,             //关闭工具栏
-            //previewCodeHighlight : false, // 关闭预览 HTML 的代码块高亮，默认开启
+            // toolbar  : false,             //关闭工具栏
+            // previewCodeHighlight : false, // 关闭预览 HTML 的代码块高亮，默认开启
             toolbarIcons: () => {
                 const fullToolbar = window.editormd.toolbarModes.full;// 添加自定义toolbar
                 return [...fullToolbar, 'uploadImgIcon', 'formulaIcon'];
@@ -138,10 +134,10 @@ class ArticleEdit extends Component {
                  * @param {Object}      cursor     CodeMirror的光标对象，可获取光标所在行和位置
                  * @param {String}      selection  编辑器选中的文本
                  */
-                uploadImgIcon: (cm, icon, cursor, selection) => {
+                uploadImgIcon: () => {
                     this.showUpdataModel()
                 },
-                formulaIcon: (cm, icon, cursor, selection) => {
+                formulaIcon: () => {
                     this.showLatexModel()
                 },
             },
@@ -152,10 +148,10 @@ class ArticleEdit extends Component {
             flowChart: true,             // 开启流程图支持，默认关闭
             sequenceDiagram: true,       // 开启时序/序列图支持，默认关闭,
             dialogLockScreen: false,   // 设置弹出层对话框不锁屏，全局通用，默认为true
-            //dialogShowMask : false,     // 设置弹出层对话框显示透明遮罩层，全局通用，默认为true
-            //dialogDraggable : false,    // 设置弹出层对话框不可拖动，全局通用，默认为true
-            //dialogMaskOpacity : 0.4,    // 设置透明遮罩层的透明度，全局通用，默认值为0.1
-            //dialogMaskBgColor : "#000", // 设置透明遮罩层的背景颜色，全局通用，默认为#fff
+            // dialogShowMask : false,     // 设置弹出层对话框显示透明遮罩层，全局通用，默认为true
+            // dialogDraggable : false,    // 设置弹出层对话框不可拖动，全局通用，默认为true
+            // dialogMaskOpacity : 0.4,    // 设置透明遮罩层的透明度，全局通用，默认值为0.1
+            // dialogMaskBgColor : "#000", // 设置透明遮罩层的背景颜色，全局通用，默认为#fff
             imageUpload: false,
             setToolbarAutoFixed: true,
             onload: () => {
@@ -197,24 +193,25 @@ class ArticleEdit extends Component {
             if (err) {
                 return;
             }
+            const fieldsValueClone = JSON.parse(JSON.stringify(fieldsValue))
             // 编辑 新增
             if (location.query.id) {
-                fieldsValue.id = location.query.id
+                fieldsValueClone.id = location.query.id
             }
             // 封面
-            fieldsValue.cover = fileList && fileList[0] ? fileList[0].url : null;
+            fieldsValueClone.cover = fileList && fileList[0] ? fileList[0].url : null;
             // 新增编辑文章
             const uploadArticle = (cover) => {
                 if (cover) {
-                    fieldsValue.cover = cover;
+                    fieldsValueClone.cover = cover;
                 }
-                fieldsValue.content = this.theEditormd.getMarkdown();
-                fieldsValue.tags = this.tagsRef.state.tags.join();
+                fieldsValueClone.content = this.theEditormd.getMarkdown();
+                fieldsValueClone.tags = this.tagsRef.state.tags.join();
 
                 return new Promise((resolve =>
                     dispatch({
                         type: 'article/addEditArticle',
-                        payload: fieldsValue,
+                        payload: fieldsValueClone,
                         callback: () => {
                             message.success('成功')
 
@@ -224,10 +221,10 @@ class ArticleEdit extends Component {
                             resolve();
                             // this.setState({
                             //   fileList: [{
-                            //     uid:  fieldsValue.id,
+                            //     uid:  fieldsValueClone.id,
                             //     name: 'cover.png',
                             //     status: 'done',
-                            //     url: fieldsValue.cover,
+                            //     url: fieldsValueClone.cover,
                             //   }],
                             // })
                         }
@@ -238,7 +235,7 @@ class ArticleEdit extends Component {
             // 判断封面是否更改
             if (fileList && fileList[0] && fileList[0].size) {
                 uploadQiniu(dispatch, fileList[0], uploadArticle)
-                return false;
+                return;
             }
             uploadArticle()
         })
@@ -249,7 +246,7 @@ class ArticleEdit extends Component {
         return this.theEditormd.getMarkdown()
     }
 
-    //打开上传图片模态框
+    // 打开上传图片模态框
     showUpdataModel = () => {
         this.setState({
             uploadImageVisible: true,
@@ -257,7 +254,7 @@ class ArticleEdit extends Component {
     }
 
     // 上传函数
-    upLoadImgFn = (fileList, file) => {
+    upLoadImgFn = ( fileList ) => {
         if (!fileList.file) return
 
         uploadQiniu(this.props.dispatch, fileList.file, (res) => {
@@ -339,14 +336,13 @@ class ArticleEdit extends Component {
             fileList,
             previewVisible,
             previewImage,
-            isPreview,
             uploadProps,
             formulaVisible,
             uploadImageVisible,
             uploadImageUrl
         } = this.state;
 
-        const { form, form: { getFieldDecorator }, uploading, submitLoading } = this.props;
+        const { form: { getFieldDecorator }, uploading, submitLoading } = this.props;
 
         const props = {
             onRemove: file => {
@@ -373,10 +369,11 @@ class ArticleEdit extends Component {
                 }
 
                 this.getBase64(file, (imageUrl) => {
-                    file.url = imageUrl
+                    const fileClone = JSON.parse(JSON.stringify(file))
+                    fileClone.url = imageUrl
                     this.setState({
                         previewImage: imageUrl,
-                        fileList: [file],
+                        fileList: [fileClone],
                     })
                 });
                 return false;
@@ -440,7 +437,7 @@ class ArticleEdit extends Component {
                                 <TagsAdd
                                     data={currentItem && currentItem.tags ? currentItem.tags.split(',') : []}
                                     ref={(dom) => { this.tagsRef = dom }}
-                                    isEdit={(currentItem && currentItem.isPreview) ? false : true}
+                                    isEdit={!(currentItem && currentItem.isPreview)}
                                 />
                             </Form.Item>
                             <Form.Item label="封面" className={styles.updateCoverBox}>
@@ -486,7 +483,7 @@ class ArticleEdit extends Component {
             >
                 <div className={styles.articDetail}>
                     <Card bordered={false} style={{ marginTop: 24 }}>
-                        <div id="editormd"></div>
+                        <div id="editormd"/>
                     </Card>
 
                     <Modal
@@ -497,16 +494,16 @@ class ArticleEdit extends Component {
                         footer={footerBtn2}
                         wrapClassName={maskOver}
                         width={532}
-                        destroyOnClose={true}
+                        destroyOnClose
                     >
                         <div className="latexbox">
                             <div className="latex_mathjax">
-                                <div id='editor'></div>
+                                <div id='editor'/>
                                 <div className="box">
-                                    <textarea id="latex_formula" rows="4" cols="40"></textarea>
-                                    <p className="link_src"></p>
+                                    <textarea id="latex_formula" rows="4" cols="40"/>
+                                    <p className="link_src"/>
                                     <p className="outlook">公式预览：</p>
-                                    <div className="see"><img id="equation" /></div>
+                                    <div className="see"><img id="equation" alt='' /></div>
                                     <Button type="primary" onClick={this.onCopy2}>复制</Button>
                                 </div>
                             </div>
@@ -518,7 +515,7 @@ class ArticleEdit extends Component {
                         visible={uploadImageVisible}
                         onCancel={this.handleCancel}
                         maskClosable={false}
-                        destroyOnClose={true}
+                        destroyOnClose
                         footer={footerBtn1}
                     >
                         <Upload.Dragger {...uploadProps}>

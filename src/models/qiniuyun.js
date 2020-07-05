@@ -1,4 +1,5 @@
 import { getQiniuToken, uploadQiniu } from '@/services/qiniuyun';
+
 export default {
   namespace: 'qiniuyun',
   state: {
