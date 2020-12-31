@@ -11,7 +11,7 @@ export default {
   menu: {
     locale: false, // 国际化
   },
-  title: "Blog后台管理系统",
+  title: "博客后台管理",
   pwa: false,
   iconfontUrl: '',
 };

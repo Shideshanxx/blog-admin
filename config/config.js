@@ -115,17 +115,17 @@ export default {
     basePath: '/',
   }, // chainWebpack: webpackPlugin,
 
-  // // // 代理
+  // 代理
   proxy: {
-    '/api/': {
-      target: 'http://127.0.0.1:7001/admin',
-      changeOrigin: true,
-      pathRewrite: { '^/api': '' },
-    },
     // '/api/': {
-    //   target: 'http://120.26.77.56:7001/admin',
+    //   target: 'http://127.0.0.1:7001/admin',
     //   changeOrigin: true,
     //   pathRewrite: { '^/api': '' },
-    // }
+    // },
+    '/api/': {
+      target: 'http://47.111.168.36:7001/admin',
+      changeOrigin: true,
+      pathRewrite: { '^/api': '' },
+    }
   },
 };
