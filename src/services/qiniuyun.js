@@ -2,7 +2,7 @@ import request from '@/utils/request';
 
 // 获取七牛签名
 export async function getQiniuToken() {
-  return request('/api/getQiniuToken');
+  return request('/admin/getQiniuToken');
 }
 
 // 上传七牛

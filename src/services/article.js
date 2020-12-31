@@ -3,22 +3,22 @@ import { stringify } from 'querystring';
 
 // 获取文章列表
 export async function getArticleList(params) {
-  return request(`/api/getArticleList?${stringify(params)}`);
+  return request(`/admin/getArticleList?${stringify(params)}`);
 }
 
 // 获取文章总数
 export async function getArticleTotal() {
-  return request(`/api/getArticleTotal`);
+  return request(`/admin/getArticleTotal`);
 }
 
 // 获取文章详情
 export async function getArticleInfo(params) {
-  return request(`/api/getArticleInfo?${stringify(params)}`);
+  return request(`/admin/getArticleInfo?${stringify(params)}`);
 }
 
 // 删除
 export async function delArticle(params) {
-  return request(`/api/delArticle`, {
+  return request(`/admin/delArticle`, {
     method: 'POST',
     data: params,
   });
@@ -26,7 +26,7 @@ export async function delArticle(params) {
 
 // 添加或修改文章
 export async function addEditArticle(params) {
-  return request(`/api/addEditArticle`, {
+  return request(`/admin/addEditArticle`, {
     method: 'POST',
     data: params,
   });
@@ -34,7 +34,7 @@ export async function addEditArticle(params) {
 
 // 上传
 export async function upload(params) {
-  return request(`/api/uploadArticleImg`, {
+  return request(`/admin/uploadArticleImg`, {
     method: 'POST',
     data: params,
   });

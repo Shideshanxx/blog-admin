@@ -3,17 +3,17 @@ import { stringify } from 'querystring';
 
 // 获取banner列表
 export async function getBannerList(params) {
-    return request(`/api/getBannerList?${stringify(params)}`);
+    return request(`/admin/getBannerList?${stringify(params)}`);
 }
 
 // 获取PreviewBanner
 export async function getPreviewBanner() {
-    return request(`/api/getPreviewBanner`);
+    return request(`/admin/getPreviewBanner`);
 }
 
 // 删除
 export async function delBanner(params) {
-    return request(`/api/delBanner`, {
+    return request(`/admin/delBanner`, {
         method: 'POST',
         data: params,
     });
@@ -21,7 +21,7 @@ export async function delBanner(params) {
 
 // 添加或修改banner
 export async function addEditBanner(params) {
-    return request(`/api/addEditBanner`, {
+    return request(`/admin/addEditBanner`, {
         method: 'POST',
         data: params,
     });
@@ -29,7 +29,7 @@ export async function addEditBanner(params) {
 
 // 上传
 export async function upload(params) {
-    return request(`/api/uploadBanner`, {
+    return request(`/admin/uploadBanner`, {
         method: 'POST',
         data: params,
     });

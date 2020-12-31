@@ -117,15 +117,9 @@ export default {
 
   // 代理
   proxy: {
-    // '/api/': {
-    //   target: 'http://127.0.0.1:7001/admin',
-    //   changeOrigin: true,
-    //   pathRewrite: { '^/api': '' },
-    // },
-    '/api/': {
-      target: 'http://47.111.168.36:7001/admin',
-      changeOrigin: true,
-      pathRewrite: { '^/api': '' },
+    '/admin': {
+      target: 'http://127.0.0.1:7001/',
+      changeOrigin: true
     }
   },
 };

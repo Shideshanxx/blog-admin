@@ -3,7 +3,7 @@ import { stringify } from 'querystring';
 
 // 登录
 export async function login(params) {
-    return request('/api/login', {
+    return request('/admin/login', {
         method: 'POST',
         data: params,
     });
@@ -11,5 +11,5 @@ export async function login(params) {
 
 // 退出登录
 export async function logout(params) {
-    return request(`/api/logout?${stringify(params)}`);
+    return request(`/admin/logout?${stringify(params)}`);
 }
