@@ -66,6 +66,7 @@ if (isAntDesignProPreview) {
 }
 
 export default {
+  history: 'hash',
   plugins,
   hash: true,
   targets: {
